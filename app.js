@@ -79,7 +79,6 @@ io.on('connection', (client) => {
         if(Object.keys(db).includes(data.room)){
             console.log(`client joined ${data.room}`);
             client.join(data.room);
-            client.emit(`[${jsUcfirst(data.room)}] Listed`, db[data.room])
         }else{
             console.warn('unknown channel')
         }
