@@ -88,8 +88,8 @@ io.on('connection', (client) => {
     client.on(actions.ADD_NOTE, (note) => {
         const newNote = createNote(note);
         console.log('add note', newNote);
-        client.to('notes').emit(actions.NOTE_ADDED, newNote);
-        client.emit('[Notes] Listed', db.notes);
+        io.in('notes').emit(actions.NOTE_ADDED, newNote);
+        io.in('notes').emit(actions.NOTES_LISTED, db.notes);
     });
 
     client.on(actions.LIST_NOTES, () => {
@@ -99,15 +99,17 @@ io.on('connection', (client) => {
     client.on(actions.UPDATE_NOTE, (note) => {
       const updatedNote = updateNote(note);
       console.log('update note', updatedNote);
-      client.to('notes').emit(actions.NOTE_UPDATED, updatedNote);
-      client.emit('[Notes] Listed', db.notes);
+      io.in('notes').emit(actions.NOTE_UPDATED, updatedNote);
+      io.in('notes').emit(actions.NOTES_LISTED, db.notes);
+
     });
 
     client.on(actions.DELETE_NOTE, ({id}) => {
       console.log("ID", id);
       deleteNote(id);
-      client.to('notes').emit(actions.NOTE_DELETED, id);
-      client.emit('[Notes] Listed', db.notes);
+      io.in('notes').emit(actions.NOTE_DELETED, id);
+      io.in('notes').emit(actions.NOTES_LISTED, db.notes);
+
       console.log(db.notes)
     });
 
