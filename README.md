@@ -14,13 +14,16 @@ interface Note {
 ```
 
 ### Incoming event list (from client to server):
-- `'join'`: 
+- `'join'`:
+
         * payload: {room: string}
         
 - `'[Notes] Add'`
+
         *  payload: `Note` object
         
 - `'[Notes] List'`
+
         *  payload: `none`
         
         
@@ -35,22 +38,28 @@ interface Note {
 ### Outgoing event list (from server to client):
 
 - `'[Notes] Added'`
+
         *  payload: `Note` object
+
         *  scope: all clients in `notes` room
         
 - `'[Notes] Listed'`
+
         *  payload: Map of `Note` objects with id as key
+
         *  scope: single client 
         
         
 - `'[Notes] Updated'`
 
         *  payload: `Note` object
+
         *  scope: all clients in `notes` room
         
 - `'[Notes] Deleted'`
 
         *  payload: `Note` object
+
         *  scope: all clients in `notes` room
 
 
