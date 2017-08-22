@@ -1,6 +1,4 @@
 module.exports = {
-
-
   ADD_NOTE: '[Notes] Add',
   UPDATE_NOTE: '[Notes] Update',
   DELETE_NOTE: '[Notes] Delete',

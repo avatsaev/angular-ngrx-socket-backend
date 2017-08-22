@@ -64,11 +64,6 @@ const deleteNote = (id) => {
   return id;
 };
 
-function jsUcfirst(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-
 io.on('connection', (client) => {
 
     console.log("client connected...");
@@ -79,7 +74,6 @@ io.on('connection', (client) => {
         if(Object.keys(db).includes(data.room)){
             console.log(`client joined ${data.room}`);
             client.join(data.room);
-            client.emit(`[${jsUcfirst(data.room)}] Listed`, db[data.room])
         }else{
             console.warn('unknown channel')
         }
@@ -88,8 +82,7 @@ io.on('connection', (client) => {
     client.on(actions.ADD_NOTE, (note) => {
         const newNote = createNote(note);
         console.log('add note', newNote);
-        client.to('notes').emit(actions.NOTE_ADDED, newNote);
-        client.emit('[Notes] Listed', db.notes);
+        io.in('notes').emit(actions.NOTE_ADDED, newNote);
     });
 
     client.on(actions.LIST_NOTES, () => {
@@ -99,15 +92,14 @@ io.on('connection', (client) => {
     client.on(actions.UPDATE_NOTE, (note) => {
       const updatedNote = updateNote(note);
       console.log('update note', updatedNote);
-      client.to('notes').emit(actions.NOTE_UPDATED, updatedNote);
-      client.emit('[Notes] Listed', db.notes);
+      io.in('notes').emit(actions.NOTE_UPDATED, updatedNote);
+
     });
 
-    client.on(actions.DELETE_NOTE, ({id}) => {
-      console.log("ID", id);
-      deleteNote(id);
-      client.to('notes').emit(actions.NOTE_DELETED, id);
-      client.emit('[Notes] Listed', db.notes);
+    client.on(actions.DELETE_NOTE, (note) => {
+      console.log("ID", note.id);
+      deleteNote(note.id);
+      io.in('notes').emit(actions.NOTE_DELETED, note);
       console.log(db.notes)
     });
 
