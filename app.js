@@ -64,11 +64,6 @@ const deleteNote = (id) => {
   return id;
 };
 
-function jsUcfirst(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-
 io.on('connection', (client) => {
 
     console.log("client connected...");
@@ -88,7 +83,6 @@ io.on('connection', (client) => {
         const newNote = createNote(note);
         console.log('add note', newNote);
         io.in('notes').emit(actions.NOTE_ADDED, newNote);
-        io.in('notes').emit(actions.NOTES_LISTED, db.notes);
     });
 
     client.on(actions.LIST_NOTES, () => {
@@ -99,16 +93,13 @@ io.on('connection', (client) => {
       const updatedNote = updateNote(note);
       console.log('update note', updatedNote);
       io.in('notes').emit(actions.NOTE_UPDATED, updatedNote);
-      io.in('notes').emit(actions.NOTES_LISTED, db.notes);
 
     });
 
-    client.on(actions.DELETE_NOTE, ({id}) => {
-      console.log("ID", id);
-      deleteNote(id);
-      io.in('notes').emit(actions.NOTE_DELETED, id);
-      io.in('notes').emit(actions.NOTES_LISTED, db.notes);
-
+    client.on(actions.DELETE_NOTE, (note) => {
+      console.log("ID", note.id);
+      deleteNote(note.id);
+      io.in('notes').emit(actions.NOTE_DELETED, note);
       console.log(db.notes)
     });
 
